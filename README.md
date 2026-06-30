@@ -31,20 +31,22 @@ A Retrieval-Augmented Generation (RAG) application that lets users upload PDF do
 
 ```
 .
-├── app.py              # Streamlit frontend — auth flow, corpus picker, chat UI
-├── main.py             # App factory, startup hooks, router registration
-├── auth.py             # JWT creation/verification, password hashing
-├── auth_routes.py      # POST /signup, POST /login
-├── corpus_routes.py    # CRUD for /corpora
-├── upload_routes.py    # POST /corpora/{id}/upload — PDF ingestion pipeline
-├── query_routes.py     # POST /corpora/{id}/query, GET /corpora/{id}/chat-history
-├── rag.py              # Core RAG: chunking, retrieval, prompt building, answer generation
-├── chroma_utils.py     # ChromaDB collection management
-├── database.py         # SQLite connection factory
-├── create_tables.py    # Schema initialisation
-├── models.py           # Dataclasses: User, Corpus, Document, ChatMessage
-├── schemas.py          # Pydantic request/response schemas
-└── requirements.txt    # Pinned dependencies
+├── backend/
+│   ├── main.py             # App factory, startup hooks, router registration
+│   ├── auth.py             # JWT creation/verification, password hashing
+│   ├── auth_routes.py      # POST /signup, POST /login
+│   ├── corpus_routes.py    # CRUD for /corpora
+│   ├── upload_routes.py    # POST /corpora/{id}/upload — PDF ingestion pipeline
+│   ├── query_routes.py     # POST /corpora/{id}/query, GET /corpora/{id}/chat-history
+│   ├── rag.py              # Core RAG: chunking, retrieval, prompt building, answer generation
+│   ├── chroma_utils.py     # ChromaDB collection management
+│   ├── database.py         # SQLite connection factory
+│   ├── create_tables.py    # Schema initialisation
+│   ├── models.py           # Dataclasses: User, Corpus, Document, ChatMessage
+│   └── schemas.py          # Pydantic request/response schemas
+├── frontend/
+│   └── app.py              # Streamlit UI — auth flow, corpus picker, chat interface
+└── requirements.txt        # Pinned dependencies
 ```
 
 ## Getting Started
@@ -77,6 +79,7 @@ Set these environment variables (or rely on the listed defaults):
 | `GROQ_MODEL` | `llama-3.3-70b-versatile` | Groq model name |
 | `CHROMA_DB_PATH` | `./chroma_db` | Directory for the ChromaDB vector store |
 | `CHROMA_EMBEDDING_MODEL` | `all-MiniLM-L6-v2` | Sentence Transformers model name |
+| `BASE_URL` | `http://localhost:8000` | Backend API URL used by the Streamlit frontend |
 | `MAX_UPLOAD_BYTES` | `20971520` (20 MB) | Maximum PDF upload size |
 
 You can place these in a `.env` file at the project root — `python-dotenv` is included and will load it automatically.
@@ -87,11 +90,13 @@ Start the backend and frontend in separate terminals:
 
 ```bash
 # Terminal 1 — FastAPI backend
+cd backend
 python -m uvicorn main:app --reload
 ```
 
 ```bash
 # Terminal 2 — Streamlit frontend
+cd frontend
 streamlit run app.py
 ```
 
